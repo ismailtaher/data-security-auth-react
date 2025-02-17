@@ -17,8 +17,9 @@ const Users = () => {
         const response = await axiosPrivate.get("/users", {
           signal: controller.signal,
         });
+        const userNames = response.data.map((user) => user.username);
         console.log(response.data);
-        isMounted && setUsers(response.data);
+        isMounted && setUsers(userNames);
       } catch (err) {
         // this ERR_CANCELED error is due to the AbortController() comming into action to help prevent memory leaks when the component unmounts, but it can cause problems with our naviagation in a few lines below, so we need and if else statement to check if we get an error due to the controller aborting and not navigate to the login page when this happens
         if (err.code === "ERR_CANCELED") {
@@ -46,7 +47,7 @@ const Users = () => {
       {users?.length ? (
         <ul>
           {users.map((user, i) => (
-            <li key={i}>{user?.username}</li>
+            <li key={i}>{user}</li>
           ))}
         </ul>
       ) : (
